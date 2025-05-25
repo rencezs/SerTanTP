@@ -12,11 +12,19 @@ async function connectDB() {
     }
 
     if(!cached.promise) {
+        // Connection options that we verified are working
         const opts = { 
-            bufferCommands: false
+            retryWrites: true,
+            w: 'majority',
+            maxPoolSize: 10,
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 45000,
+            family: 4
         }
         
-        cached.promise = mongoose.connect(`${process.env.MONGODB_URI}/AllOf`, opts).then(mongoose => {
+        // Using the direct MongoDB URI without appending database name
+        // since it's included in the connection string
+        cached.promise = mongoose.connect(process.env.MONGODB_URI, opts).then(mongoose => {
             return mongoose;
         })
     }
