@@ -40,9 +40,12 @@ export const syncUserUpdation = inngest.createFunction(
 
     async ({ event }) => {
         const { id, first_name, last_name , email_addresses, image_url } = event.data;
+/* AI */        const email = Array.isArray(email_addresses) && email_addresses.length > 0
+                ? email_addresses[0].email_address
+           /*AI*/          : null;
         const userData = {
             _id: id,
-            email: email_addresses[0].email_address,
+      /* AI*/      email,
             name: first_name + ' ' + last_name,
             imageUrl: image_url
         }
