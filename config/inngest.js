@@ -15,19 +15,31 @@ export const syncUserCreation = inngest.createFunction(
     },
 
     async ({ event }) => {
-        const { id, first_name, last_name , email_addresses, image_url } = event.data;
-        const userData = {
-            _id: id,
-            email: email_addresses[0].email_address,
-            name: first_name + ' ' + last_name,
-            imageUrl: image_url
+        try {
+            console.log('Received user creation event:', event.data);
+            
+            const { id, first_name, last_name, email_addresses, image_url } = event.data;
+            const userData = {
+                _id: id,
+                email: email_addresses[0].email_address,
+                name: first_name + ' ' + last_name,
+                imageUrl: image_url
+            }
+            
+            console.log('Attempting database connection for user creation');
+            await connectDB();
+            console.log('Database connected successfully');
+            
+            const createdUser = await User.create(userData);
+            console.log('User created successfully:', createdUser);
+            
+            return { success: true, userId: id };
+        } catch (error) {
+            console.error('Error in user creation:', error);
+            throw error;
         }
-        await connectDB()
-        await User.create(userData)
-
     }
 )
-
 
 // Inngest Function to update user data in database
 export const syncUserUpdation = inngest.createFunction( 
@@ -39,18 +51,33 @@ export const syncUserUpdation = inngest.createFunction(
     },
 
     async ({ event }) => {
-        const { id, first_name, last_name , email_addresses, image_url } = event.data;
-/* AI */        const email = Array.isArray(email_addresses) && email_addresses.length > 0
+        try {
+            console.log('Received user update event:', event.data);
+            
+            const { id, first_name, last_name, email_addresses, image_url } = event.data;
+            const email = Array.isArray(email_addresses) && email_addresses.length > 0
                 ? email_addresses[0].email_address
-           /*AI*/          : null;
-        const userData = {
-            _id: id,
-      /* AI*/      email,
-            name: first_name + ' ' + last_name,
-            imageUrl: image_url
+                : null;
+            
+            const userData = {
+                _id: id,
+                email,
+                name: first_name + ' ' + last_name,
+                imageUrl: image_url
+            }
+            
+            console.log('Attempting database connection for user update');
+            await connectDB();
+            console.log('Database connected successfully');
+            
+            const updatedUser = await User.findByIdAndUpdate(id, userData, { new: true });
+            console.log('User updated successfully:', updatedUser);
+            
+            return { success: true, userId: id };
+        } catch (error) {
+            console.error('Error in user update:', error);
+            throw error;
         }
-        await connectDB()
-        await User.findByIdAndUpdate(id, userData)
     }
 )
 
@@ -63,8 +90,22 @@ export const syncUserDeletion = inngest.createFunction(
         event: "clerk/user.deleted"
     },
     async ({ event }) => {
-        const { id } = event.data;
-        await connectDB();
-        await User.findByIdAndDelete(id);
+        try {
+            console.log('Received user deletion event:', event.data);
+            
+            const { id } = event.data;
+            
+            console.log('Attempting database connection for user deletion');
+            await connectDB();
+            console.log('Database connected successfully');
+            
+            const deletedUser = await User.findByIdAndDelete(id);
+            console.log('User deleted successfully:', deletedUser);
+            
+            return { success: true, userId: id };
+        } catch (error) {
+            console.error('Error in user deletion:', error);
+            throw error;
+        }
     }
 )
