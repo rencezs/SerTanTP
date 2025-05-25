@@ -12,25 +12,33 @@ async function connectDB() {
     }
 
     if(!cached.promise) {
-        // Connection options that we verified are working
         const opts = { 
-            retryWrites: true,
-            w: 'majority',
-            maxPoolSize: 10,
-            serverSelectionTimeoutMS: 5000,
-            socketTimeoutMS: 45000,
+            bufferCommands: false,
+            serverSelectionTimeoutMS: 30000, // Increase timeout
             family: 4
         }
         
-        // Using the direct MongoDB URI without appending database name
-        // since it's included in the connection string
-        cached.promise = mongoose.connect(process.env.MONGODB_URI, opts).then(mongoose => {
-            return mongoose;
-        })
+        // Use a simpler connection string
+        const mongoUri = 'mongodb+srv://AllOff123-samePass:AllOff123@cluster0.ax0xzjc.mongodb.net/Admen';
+        
+        cached.promise = mongoose.connect(mongoUri, opts)
+            .then(mongoose => {
+                console.log('Connected to MongoDB database:', mongoose.connection.db.databaseName);
+                return mongoose;
+            })
+            .catch(error => {
+                console.error('MongoDB connection error:', error);
+                throw error;
+            });
     }
 
-    cached.conn = await cached.promise;
-    return cached.conn;
+    try {
+        cached.conn = await cached.promise;
+        return cached.conn;
+    } catch (error) {
+        cached.promise = null; // Reset the promise on error
+        throw error;
+    }
 }
 
 export default connectDB;

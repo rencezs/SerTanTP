@@ -1,38 +1,28 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
+import connectDB from "@/config/db";
 
-// Health check endpoint for database connectivity
+// Database connection test endpoint
 export async function GET() {
     try {
-        // If we're already connected, return the status
-        if (mongoose.connection.readyState === 1) {
-            return NextResponse.json({ 
-                status: "healthy",
-                connection: "connected",
-                database: mongoose.connection.db.databaseName,
-                timestamp: new Date().toISOString()
-            }, { status: 200 });
-        }
-
-        // If not connected, try to connect
-        await mongoose.connect(process.env.MONGODB_URI, {
-            retryWrites: true,
-            w: 'majority',
-            maxPoolSize: 10,
-            serverSelectionTimeoutMS: 5000,
-            socketTimeoutMS: 45000,
-            family: 4
-        });
+        // Try to connect using our connectDB function
+        await connectDB();
+        
+        // Get database name and connection status
+        const dbName = mongoose.connection.db.databaseName;
+        const readyState = mongoose.connection.readyState;
+        const host = mongoose.connection.host;
 
         return NextResponse.json({ 
             status: "healthy",
-            connection: "established",
-            database: mongoose.connection.db.databaseName,
+            connection: readyState === 1 ? "connected" : "connecting",
+            database: dbName,
+            host: host,
             timestamp: new Date().toISOString()
         }, { status: 200 });
 
     } catch (error) {
-        console.error('Database health check failed:', {
+        console.error('Database connection error:', {
             name: error.name,
             message: error.message,
             code: error.code
@@ -43,9 +33,14 @@ export async function GET() {
             error: error.message,
             details: {
                 type: error.name,
-                code: error.code
+                code: error.code,
+                suggestions: [
+                    "Check your internet connection",
+                    "Verify MongoDB Atlas is accessible",
+                    "Check if the database credentials are correct"
+                ]
             },
             timestamp: new Date().toISOString()
-        }, { status: 503 }); // 503 Service Unavailable
+        }, { status: 503 });
     }
 } 
