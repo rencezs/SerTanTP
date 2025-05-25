@@ -20,9 +20,9 @@ import heart_icon from "./heart_icon.svg";
 import star_icon from "./star_icon.svg";
 import redirect_icon from "./redirect_icon.svg";
 import star_dull_icon from "./star_dull_icon.svg";
-import header_headphone_image from "./header_headphone_image.png";
-import header_playstation_image from "./header_playstation_image.png";
-import header_macbook_image from "./header_macbook_image.png";
+import header_headphone_image from "./public copy/group1-removebg-preview.png";
+import header_playstation_image from "./public copy/group6-removebg-preview.png";
+import header_macbook_image from "./public copy/group8.png";
 import macbook_image from "./macbook_image.png";
 import bose_headphone_image from "./bose_headphone_image.png";
 import apple_earphone_image from "./apple_earphone_image.png";
@@ -134,15 +134,15 @@ export const productsDummyData = [
   {
     "_id": "67a1f4e43f34a77b6dde9144",
     "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Apple AirPods Pro 2nd gen",
-    "description": "Apple AirPods Pro (2nd Gen) with MagSafe Case (USB-C) provide excellent sound, active noise cancellation, and a comfortable fit. The USB-C case ensures quick charging, and they pair seamlessly with Apple devices for an effortless audio experience.",
+    "name": "PRODUCT NAME 1",
+    "description": "A minimalist gray tee that's anything but basic — with the eye-catching 'All Off' brand boldly printed on the back, it's the perfect blend of casual cool and confident style",
     "price": 499.99,
     "offerPrice": 399.99,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/k4dafzhwhgcn5tnoylrw.webp",
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/j212frakb8hdrhvhajhg.webp",
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/imwuugqxsajuwqpkegb5.webp",
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/k1oqaslw5tb3ebw01vvj.webp"
+      "/copy/group1-removebg-preview.png",
+      "/copy/grouped1-removebg-preview.png",
+      "/copy/Normalsize.png.png",
+      "/copy/Oversized.png.png"
     ],
     "category": "Earphone",
     "date": 1738667236865,
@@ -151,12 +151,15 @@ export const productsDummyData = [
   {
     "_id": "67a1f52e3f34a77b6dde914a",
     "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Bose QuietComfort 45",
-    "description": "The Bose QuietComfort 45 headphones are engineered for exceptional sound quality and unparalleled noise cancellation. With a 24-hour battery life and comfortable, lightweight design, these headphones deliver premium audio for any environment. Whether on a flight, in the office, or at home, the Bose QC45 blocks out distractions, offering an immersive listening experience.",
+    "name": "PRODUCT NAME 2",
+    "description": "The white t-shirt combines timeless style with everyday comfort. Crafted from soft, breathable fabric, it's lightweight and perfect for all-day wear. Whether you're out with friends, at work, or just relaxing at home, this tee offers a clean, fresh look that pairs effortlessly with any outfit. Its versatile design makes it a wardrobe essential for any occasion.",
     "price": 429.99,
     "offerPrice": 329.99,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/m16coelz8ivkk9f0nwrz.webp"
+      "/copy/group2-removebg-preview.png",
+      "/copy/grouped2-removebg-preview.png",
+      "/copy/Normalsize.png.png",
+      "/copy/Oversized.png.png"
     ],
     "category": "Headphone",
     "date": 1738667310300,
@@ -165,12 +168,15 @@ export const productsDummyData = [
   {
     "_id": "67a1f5663f34a77b6dde914c",
     "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Samsung Galaxy S23",
-    "description": "The Samsung Galaxy S23 offers an all-encompassing mobile experience with its advanced AMOLED display, offering vibrant visuals and smooth interactions. Equipped with top-of-the-line fitness tracking features and cutting-edge technology, this phone delivers outstanding performance. With powerful hardware, a sleek design, and long battery life, the S23 is perfect for those who demand the best in mobile innovation.",
+    "name": "PRODUCT NAME 3",
+    "description": "This black T-shirt delivers an all-encompassing fashion experience with its sleek and versatile design, offering bold style and comfortable wear. Crafted with top-quality materials and attention to detail, it's built for outstanding performance—whether you're out and about or relaxing at home. With a modern fit, durable fabric, and timeless black color, this T-shirt is perfect for those who demand the best in everyday wear",
     "price": 899.99,
     "offerPrice": 799.99,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/xjd4eprpwqs7odbera1w.webp"
+      "/copy/group3-removebg-preview.png",
+      "/copy/grouped3-removebg-preview.png",
+      "/copy/Normalsize.png.png",
+      "/copy/Oversized.png.png"
     ],
     "category": "Smartphone",
     "date": 1738667366224,
@@ -179,12 +185,16 @@ export const productsDummyData = [
   {
     "_id": "67a1f5993f34a77b6dde914e",
     "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Garmin Venu 2",
-    "description": "The Garmin Venu 2 smartwatch blends advanced fitness tracking with sophisticated design, offering a wealth of features such as heart rate monitoring, GPS, and sleep tracking. Built with a 24-hour battery life, this watch is ideal for fitness enthusiasts and anyone looking to enhance their daily lifestyle. With a stunning AMOLED display and customizable watch faces, the Venu 2 combines technology with style seamlessly.",
+    "name": "PRODUCT NAME 4",
+    "description": "This black T-shirt makes a bold impression with a striking design that refuses to be ignored. On the back, a massive dominates the space, instantly grabbing attention. Below, vivid lips add a pop of personality and edge, blending art with attitude. Crafted for everyday comfort, the fabric feels soft yet durable—perfect for any scene, any vibe. Whether you're dressing up streetwear or making casual moments count, this tee delivers iconic flair. It's not just a shirt—it's a conversation starter, a bold choice, a piece that says something loud without speaking a word. Wear it your way, unapologetically.",
     "price": 399.99,
     "offerPrice": 349.99,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/hdfi4u3fmprazpnrnaga.webp"
+      "/copy/group4-removebg-preview.png",
+      "/copy/grouped4BLACK-removebg-preview.png",
+      "/copy/grouped4WHITE-removebg-preview.png",
+      "/copy/Normalsize.png.png",
+      "/copy/Oversized.png.png"
     ],
     "category": "Earphone",
     "date": 1738667417511,
@@ -193,12 +203,15 @@ export const productsDummyData = [
   {
     "_id": "67a1f5ef3f34a77b6dde9150",
     "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "PlayStation 5",
-    "description": "The PlayStation 5 takes gaming to the next level with ultra-HD graphics, a powerful 825GB SSD, and ray tracing technology for realistic visuals. Whether you're into high-action games or immersive storytelling, the PS5 delivers fast loading times, seamless gameplay, and stunning visuals. It's a must-have for any serious gamer looking for the ultimate gaming experience.",
+    "name": "PRODUCT NAME 5",
+    "description": "Clean, crisp, and effortlessly cool, this white T-shirt brings a fresh vibe to your everyday look. With a laid-back fit and ultra-soft fabric, it's designed for comfort without sacrificing style. A subtle yet eye-catching graphic sits on the back—random, abstract, and open to interpretation—perfect for those who like a little mystery in their wardrobe. Whether you're out for the day or keeping things low-key, this tee keeps it casual with just enough edge. Pair it with jeans, joggers, or layers—whatever your mood, this shirt is ready. It's not just what you wear, it's how you wear it.",
     "price": 599.99,
     "offerPrice": 499.99,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/dd3l13vfoartrgbvkkh5.webp"
+      "/copy/group5-removebg-preview.png",
+      "/copy/grouped5-removebg-preview.png",
+      "/copy/Normalsize.png.png",
+      "/copy/Oversized.png.png"
     ],
     "category": "Accessories",
     "date": 1738667503075,
@@ -207,12 +220,14 @@ export const productsDummyData = [
   {
     "_id": "67a1f70c3f34a77b6dde9156",
     "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Canon EOS R5",
-    "description": "The Canon EOS R5 is a game-changing mirrorless camera with a 45MP full-frame sensor, offering ultra-high resolution and the ability to shoot 8K video. Whether you're capturing professional-quality stills or cinematic video footage, this camera delivers exceptional clarity, speed, and color accuracy. With advanced autofocus and in-body stabilization, the R5 is ideal for photographers and videographers alike.",
+    "name": "PRODUCT NAME 6",
+    "description": "Sleek, sharp, and built to stand out—this black T-shirt brings clean design and everyday comfort together in perfect focus. Made from high-quality fabric, it features a relaxed fit that works anywhere, anytime. A single image rests on the back, subtle yet striking, adding visual interest without overpowering the look. Just like a well-composed photo, every detail here matters—simple, balanced, and intentional. Whether you're out shooting, exploring the city, or keeping it casual, this tee keeps your style crisp and effortless. Wear it with confidence—because sometimes, the best shots are the ones you wear, not just take.",
     "price": 4199.99,
     "offerPrice": 3899.99,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/r5h370zuujvrw461c6wy.webp"
+      "/copy/grouped6-removebg-preview.png",
+      "/copy/Normalsize.png.png",
+      "/copy/Oversized.png.png"
     ],
     "category": "Camera",
     "date": 1738667788883,
@@ -221,12 +236,14 @@ export const productsDummyData = [
   {
     "_id": "67a1f7c93f34a77b6dde915a",
     "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "MacBook Pro 16",
-    "description": "The MacBook Pro 16, powered by Apple's M2 Pro chip, offers outstanding performance with 16GB RAM and a 512GB SSD. Whether you're editing high-resolution video, developing software, or multitasking with ease, this laptop can handle the toughest tasks. It features a stunning Retina display with True Tone technology, making it a top choice for professionals in creative industries or anyone who demands premium performance in a portable form.",
+    "name": "PRODUCT NAME 7",
+    "description": "Power meets precision in this black T-shirt designed for those who demand more from their style. Featuring a bold, oversized cross graphic on the back, it makes a strong visual statement while keeping the front clean and minimal. Crafted from premium fabric with a smooth, modern fit, it delivers all-day comfort—whether you're on the move or locked into your grind. Like the tools of a high-performance workspace, this tee is sharp, focused, and made to elevate. For creatives, thinkers, and doers, this shirt doesn't just keep up—it leads. Wear it like you mean it: bold, balanced, and built right.",
     "price": 2799.99,
     "offerPrice": 2499.99,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/rzri7kytphxalrm9rubd.webp"
+      "/copy/group7.png",
+      "/copy/Normalsize.png.png",
+      "/copy/Oversized.png.png"
     ],
     "category": "Laptop",
     "date": 1738667977644,
@@ -235,12 +252,14 @@ export const productsDummyData = [
   {
     "_id": "67a1f8363f34a77b6dde915c",
     "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Sony WF-1000XM5",
-    "description": "Sony WF-1000XM5 true wireless earbuds deliver immersive sound with Hi-Res Audio and advanced noise cancellation technology. Designed for comfort and quality, they provide a stable, snug fit for a secure listening experience. Whether you're working out or traveling, these earbuds will keep you connected with the world around you while enjoying rich, clear sound.",
+    "name": "PRODUCT NAME 8",
+    "description": "This black T-shirt brings together sleek design and all-day comfort, echoing the clean precision of high-end tech. Made for those who move through life with purpose, it offers a smooth, tailored fit and breathable fabric that feels as good as it looks. A subtle nod to minimalism and modern vibes, it's the kind of tee that pairs with everything but stands out on its own. Whether you're on the go, relaxing, or tuning out the noise, this shirt keeps you grounded in style. Quietly bold, effortlessly cool—this is the shirt for those who move smart and stay sharp.",
     "price": 349.99,
     "offerPrice": 299.99,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/e3zjaupyumdkladmytke.webp"
+      "/copy/group8.png",
+      "/copy/Normalsize.png.png",
+      "/copy/Oversized.png.png"
     ],
     "category": "Earphone",
     "date": 1738668086331,
@@ -254,7 +273,9 @@ export const productsDummyData = [
     "price": 1699.99,
     "offerPrice": 1499.99,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/qqdcly8a8vkyciy9g0bw.webp"
+      "/copy/group9.png",
+      "/copy/Normalsize.png.png",
+      "/copy/Oversized.png.png"
     ],
     "category": "Accessories",
     "date": 1738668126660,
@@ -268,7 +289,9 @@ export const productsDummyData = [
     "price": 2199.99,
     "offerPrice": 1999.99,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/wig1urqgnkeyp4t2rtso.webp"
+      "/copy/group10.png",
+      "/copy/Normalsize.png.png",
+      "/copy/Oversized.png.png"
     ],
     "category": "Laptop",
     "date": 1738668619198,
@@ -343,7 +366,7 @@ export const orderDummyData = [
           "price": 429.99,
           "offerPrice": 329.99,
           "image": [
-            "https://res.cloudinary.com/djbvf02yt/image/upload/v1738667311/m16coelz8ivkk9f0nwrz.png"
+            "/copy/group2-removebg-preview.png"
           ],
           "category": "Headphone",
           "date": 1738667310300,
