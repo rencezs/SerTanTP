@@ -12,31 +12,37 @@ async function connectDB() {
     }
 
     if(!cached.promise) {
-        const opts = { 
-            bufferCommands: false,
-            serverSelectionTimeoutMS: 30000, // Increase timeout
-            family: 4
-        }
+        // Using the connection string that worked with the native driver
+        const mongoUri = 'mongodb+srv://AllOff123-samePass:AllOff123@cluster0.ax0xzjc.mongodb.net/Admen?retryWrites=true&w=majority';
         
-        // Use a simpler connection string
-        const mongoUri = 'mongodb+srv://AllOff123-samePass:AllOff123@cluster0.ax0xzjc.mongodb.net/Admen';
+        console.log('Attempting to connect to MongoDB...');
         
-        cached.promise = mongoose.connect(mongoUri, opts)
-            .then(mongoose => {
-                console.log('Connected to MongoDB database:', mongoose.connection.db.databaseName);
-                return mongoose;
-            })
-            .catch(error => {
-                console.error('MongoDB connection error:', error);
-                throw error;
+        try {
+            cached.promise = mongoose.connect(mongoUri, {
+                bufferCommands: false,
+                maxPoolSize: 10
             });
+            
+            const conn = await cached.promise;
+            console.log('Connected to MongoDB database:', conn.connection.db.databaseName);
+            
+            return conn;
+        } catch (error) {
+            console.error('MongoDB connection error:', {
+                message: error.message,
+                code: error.code,
+                name: error.name
+            });
+            cached.promise = null;
+            throw error;
+        }
     }
 
     try {
         cached.conn = await cached.promise;
         return cached.conn;
     } catch (error) {
-        cached.promise = null; // Reset the promise on error
+        cached.promise = null;
         throw error;
     }
 }
