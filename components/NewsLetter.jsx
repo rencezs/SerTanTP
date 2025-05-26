@@ -13,10 +13,10 @@ const NewsLetter = () => {
         <input
           className="border border-gray-500/30 rounded-md h-full border-r-0 outline-none w-full rounded-r-none px-3 text-gray-500"
           type="text"
-          placeholder="Enter your email id"
+          placeholder="Enter your email"
         />
         <button className="md:px-12 px-8 h-full text-white bg-orange-600 rounded-md rounded-l-none">
-          Subscribe
+          Save 20% Now
         </button>
       </div>
     </div>

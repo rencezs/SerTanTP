@@ -30,7 +30,9 @@ export async function POST(request) {
         // Calculate amount using items
         let totalAmount = 0;
         for (const item of items) {
-            const product = await Product.findById(item.product);
+            // Extract productId, size, fit from item.product
+            const [productId, size, fit] = item.product.split('_');
+            const product = await Product.findById(productId);
             if (!product) {
                 return NextResponse.json(
                     { success: false, message: `Product not found: ${item.product}` },
@@ -38,6 +40,10 @@ export async function POST(request) {
                 );
             }
             totalAmount += product.offerPrice * item.quantity;
+            // Optionally, update item to include size/fit for order record
+            item.product = productId;
+            if (size) item.size = size;
+            if (fit) item.fit = fit;
         }
 
         // Add 20% for taxes and fees

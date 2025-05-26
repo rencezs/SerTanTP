@@ -14,7 +14,7 @@ export const useAppContext = () => {
 
 export const AppContextProvider = (props) => {
 
-    const currency = process.env.NEXT_PUBLIC_CURRENCY || '$'
+    const currency = process.env.NEXT_PUBLIC_CURRENCY || '₱'
     const router = useRouter()
 
     const { user, isLoaded: isUserLoaded } = useUser();
@@ -77,63 +77,50 @@ export const AppContextProvider = (props) => {
        }
     }
 
-    const addToCart = async (itemId) => {
-
+    const addToCart = async (itemId, size, fit) => {
+        const key = size && fit ? `${itemId}_${size}_${fit}` : itemId;
         let cartData = structuredClone(cartItems);
-        if (cartData[itemId]) {
-            cartData[itemId] += 1;
-        }
-        else {
-            cartData[itemId] = 1;
+        if (cartData[key]) {
+            cartData[key] += 1;
+        } else {
+            cartData[key] = 1;
         }
         setCartItems(cartData);
-        
-
         if (user) {
             try {
-                const token = await getToken()
-
-                await axios.post('/api/cart/update', {cartData}, {headers: {Authorization: `Bearer ${token}`}})
-
-                toast.success('Item added to cart')
-
+                const token = await getToken();
+                await axios.post('/api/cart/update', {cartData}, {headers: {Authorization: `Bearer ${token}`}});
+                toast.success('Item added to cart');
             } catch (error) {
-                toast.error(error.message)
+                toast.error(error.message);
             }
         }
-
     }
 
-    const updateCartQuantity = async (itemId, quantity) => {
-
+    const updateCartQuantity = async (itemKey, quantity) => {
         let cartData = structuredClone(cartItems);
         if (quantity === 0) {
-            delete cartData[itemId];
+            delete cartData[itemKey];
         } else {
-            cartData[itemId] = quantity;
+            cartData[itemKey] = quantity;
         }
-        setCartItems(cartData)
-
+        setCartItems(cartData);
         if (user) {
             try {
-                const token = await getToken()
-
-                await axios.post('/api/cart/update', {cartData}, {headers: {Authorization: `Bearer ${token}`}})
-
-                toast.success('Cart updated')
-
+                const token = await getToken();
+                await axios.post('/api/cart/update', {cartData}, {headers: {Authorization: `Bearer ${token}`}});
+                toast.success('Cart updated');
             } catch (error) {
-                toast.error(error.message)
+                toast.error(error.message);
             }
         }
-
     }
 
     const getCartCount = () => {
         let totalCount = 0;
-        for (const items in cartItems) {
-            if (cartItems[items] > 0) {
-                totalCount += cartItems[items];
+        for (const key in cartItems) {
+            if (cartItems[key] > 0) {
+                totalCount += cartItems[key];
             }
         }
         return totalCount;
@@ -141,10 +128,11 @@ export const AppContextProvider = (props) => {
 
     const getCartAmount = () => {
         let totalAmount = 0;
-        for (const items in cartItems) {
-            let itemInfo = products.find((product) => product._id === items);
-            if (cartItems[items] > 0) {
-                totalAmount += itemInfo.offerPrice * cartItems[items];
+        for (const key in cartItems) {
+            const [productId] = key.split('_');
+            let itemInfo = products.find((product) => product._id === productId);
+            if (itemInfo && cartItems[key] > 0) {
+                totalAmount += itemInfo.offerPrice * cartItems[key];
             }
         }
         return Math.floor(totalAmount * 100) / 100;

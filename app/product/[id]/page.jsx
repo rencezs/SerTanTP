@@ -14,10 +14,14 @@ const Product = () => {
 
     const { id } = useParams();
 
-    const { products, router, addToCart } = useAppContext()
+    const { products, router, addToCart, currency } = useAppContext()
 
     const [mainImage, setMainImage] = useState(null);
     const [productData, setProductData] = useState(null);
+    const [selectedSize, setSelectedSize] = useState("");
+    const [selectedFit, setSelectedFit] = useState("");
+    const sizeOptions = ["Small", "Medium", "Large", "XL", "2XL"];
+    const fitOptions = ["Normal", "Oversize"];
 
     const fetchProductData = async () => {
         const product = products.find(product => product._id === id);
@@ -67,6 +71,38 @@ const Product = () => {
                     <h1 className="text-3xl font-medium text-gray-800/90 mb-4">
                         {productData.name}
                     </h1>
+                    <div className="flex flex-col gap-4 mb-4">
+                        <div>
+                            <span className="font-medium text-gray-700 mr-2">Size:</span>
+                            <div className="flex gap-2 mt-2 flex-wrap">
+                                {sizeOptions.map((size) => (
+                                    <button
+                                        key={size}
+                                        type="button"
+                                        className={`px-4 py-1.5 rounded border text-sm transition ${selectedSize === size ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+                                        onClick={() => setSelectedSize(size)}
+                                    >
+                                        {size}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div>
+                            <span className="font-medium text-gray-700 mr-2">Fit:</span>
+                            <div className="flex gap-2 mt-2">
+                                {fitOptions.map((fit) => (
+                                    <button
+                                        key={fit}
+                                        type="button"
+                                        className={`px-4 py-1.5 rounded border text-sm transition ${selectedFit === fit ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
+                                        onClick={() => setSelectedFit(fit)}
+                                    >
+                                        {fit}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                     <div className="flex items-center gap-2">
                         <div className="flex items-center gap-0.5">
                             <Image className="h-4 w-4" src={assets.star_icon} alt="star_icon" />
@@ -85,9 +121,9 @@ const Product = () => {
                         {productData.description}
                     </p>
                     <p className="text-3xl font-medium mt-6">
-                        ${productData.offerPrice}
+                        {currency}{productData.offerPrice}
                         <span className="text-base font-normal text-gray-800/60 line-through ml-2">
-                            ${productData.price}
+                            {currency}{productData.price}
                         </span>
                     </p>
                     <hr className="bg-gray-600 my-6" />
@@ -113,10 +149,23 @@ const Product = () => {
                     </div>
 
                     <div className="flex items-center mt-10 gap-4">
-                        <button onClick={() => addToCart(productData._id)} className="w-full py-3.5 bg-gray-100 text-gray-800/80 hover:bg-gray-200 transition">
+                        <button
+                            onClick={() => selectedSize && selectedFit && addToCart(productData._id, selectedSize, selectedFit)}
+                            className={`w-full py-3.5 bg-gray-100 text-gray-800/80 hover:bg-gray-200 transition ${(!selectedSize || !selectedFit) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={!selectedSize || !selectedFit}
+                        >
                             Add to Cart
                         </button>
-                        <button onClick={() => { addToCart(productData._id); router.push('/cart') }} className="w-full py-3.5 bg-orange-500 text-white hover:bg-orange-600 transition">
+                        <button
+                            onClick={() => {
+                                if (selectedSize && selectedFit) {
+                                    addToCart(productData._id, selectedSize, selectedFit);
+                                    router.push('/cart');
+                                }
+                            }}
+                            className={`w-full py-3.5 bg-orange-500 text-white hover:bg-orange-600 transition ${(!selectedSize || !selectedFit) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={!selectedSize || !selectedFit}
+                        >
                             Buy now
                         </button>
                     </div>

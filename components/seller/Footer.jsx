@@ -8,15 +8,12 @@ const Footer = () => {
       <div className="flex items-center gap-4">
         <Image 
             className="hidden md:block h-auto" 
-            src={assets.logo} 
+            src="/copy/Picsart_23-04-27_15-55-05-831.png" 
             alt="QuickCart Logo"
             width={128}
             height={40}
         />
         <div className="hidden md:block h-7 w-px bg-gray-500/60"></div>
-        <p className="py-4 text-center text-xs md:text-sm text-gray-500">
-          Copyright 2025 © greatstack.dev All Right Reserved.
-        </p>
       </div>
       <div className="flex items-center gap-3">
         <a href="#">

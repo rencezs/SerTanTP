@@ -16,7 +16,7 @@ const Footer = () => {
             priority
           />
           <p className="mt-6 text-sm">
-          At AllOff, our distinctive ‘A’ emblem stands for ambition and authenticity. Every piece in our collection is crafted with premium fabrics and precise tailoring, marrying timeless style with contemporary edge. Whether you’re navigating city life or venturing off the beaten path, AllOff empowers you to break free from the ordinary and make every moment count.
+          At AllOff, our distinctive 'A' emblem stands for ambition and authenticity. Every piece in our collection is crafted with premium fabrics and precise tailoring, marrying timeless style with contemporary edge. Whether you're navigating city life or venturing off the beaten path, AllOff empowers you to break free from the ordinary and make every moment count.
           </p>
         </div>
 
@@ -50,9 +50,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <p className="py-4 text-center text-xs md:text-sm">
-        Copyright 2025 © GreatStack.dev All Right Reserved.
-      </p>
     </footer>
   );
 };
