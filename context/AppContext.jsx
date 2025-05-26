@@ -14,7 +14,7 @@ export const useAppContext = () => {
 
 export const AppContextProvider = (props) => {
 
-    const currency = process.env.NEXT_PUBLIC_CURRENCY
+    const currency = process.env.NEXT_PUBLIC_CURRENCY || '$'
     const router = useRouter()
 
     const { user, isLoaded: isUserLoaded } = useUser();
@@ -25,19 +25,23 @@ export const AppContextProvider = (props) => {
     const [isSeller, setIsSeller] = useState(false)
     const [cartItems, setCartItems] = useState({})
     const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     const fetchProductData = async () => {
         try {
             setIsLoading(true)
+            setError(null)
             const {data} = await axios.get('/api/product/list')
 
             if (data.success) {
                 setProducts(data.products)
             } else {
+                setError(data.message)
                 toast.error(data.message)
             }
 
         } catch (error) {
+            setError(error.message)
             toast.error(error.message)
         } finally {
             setIsLoading(false)
@@ -46,22 +50,29 @@ export const AppContextProvider = (props) => {
 
     const fetchUserData = async () => {
        try {
+        setError(null)
         if (user?.publicMetadata?.role === 'seller') {
             setIsSeller(true)
         }
 
         const token = await getToken()
+        if (!token) {
+            setError('Authentication token not available')
+            return
+        }
 
         const {data} = await axios.get('/api/user/data', { headers: {Authorization: `Bearer ${token}`}})
 
         if (data.success) {
             setUserData(data.user)
-            setCartItems(data.user.cartItems)
+            setCartItems(data.user.cartItems || {})
         } else {
+            setError(data.message)
             toast.error(data.message)
         }
         
        } catch (error) {
+        setError(error?.message || 'Error fetching user data')
         toast.error(error?.message || 'Error fetching user data')
        }
     }
@@ -170,11 +181,16 @@ export const AppContextProvider = (props) => {
         updateCartQuantity,
         getCartCount,
         getCartAmount,
-        isLoading
+        isLoading,
+        error
     }
 
     if (!isUserLoaded) {
-        return null // or a loading spinner
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
+            </div>
+        )
     }
 
     return (
