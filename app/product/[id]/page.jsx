@@ -9,12 +9,13 @@ import { useParams } from "next/navigation";
 import Loading from "@/components/Loading";
 import { useAppContext } from "@/context/AppContext";
 import React from "react";
+import toast from "react-hot-toast";
 
 const Product = () => {
 
     const { id } = useParams();
 
-    const { products, router, addToCart, currency } = useAppContext()
+    const { products, router, addToCart, currency, user, getToken, fetchProductData: fetchAllProducts } = useAppContext()
 
     const [mainImage, setMainImage] = useState(null);
     const [productData, setProductData] = useState(null);
@@ -23,14 +24,119 @@ const Product = () => {
     const sizeOptions = ["Small", "Medium", "Large", "XL", "2XL"];
     const fitOptions = ["Normal", "Oversize"];
 
+    // Review form state
+    const [reviewRating, setReviewRating] = useState(5);
+    const [reviewComment, setReviewComment] = useState("");
+    const [reviewLoading, setReviewLoading] = useState(false);
+    const [reviewError, setReviewError] = useState("");
+
     const fetchProductData = async () => {
-        const product = products.find(product => product._id === id);
-        setProductData(product);
-    }
+        try {
+            const res = await fetch(`/api/product/${id}`);
+            const data = await res.json();
+            if (data.success && data.product) {
+                setProductData(data.product);
+            }
+        } catch {}
+    };
 
     useEffect(() => {
         fetchProductData();
-    }, [id, products.length])
+    }, [id]);
+
+    // Defensive: ensure reviews is always an array
+    const reviews = Array.isArray(productData?.reviews) ? productData.reviews : [];
+    const avgRating = reviews.length > 0 ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1) : '0.0';
+    const fullStars = Math.round(avgRating);
+
+    // Submit review handler
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        if (!reviewRating || !reviewComment.trim()) {
+            setReviewError("Please provide a rating and comment.");
+            return;
+        }
+        setReviewLoading(true);
+        setReviewError("");
+        // Debug: log product ID
+        console.log('Submitting review for product ID:', id);
+        // Optimistically update UI
+        const optimisticReview = {
+            userId: user?.id || "me",
+            rating: reviewRating,
+            comment: reviewComment,
+            date: Date.now(),
+        };
+        setProductData(prev => prev ? {
+            ...prev,
+            reviews: [optimisticReview, ...(Array.isArray(prev.reviews) ? prev.reviews : [])],
+        } : prev);
+        try {
+            const token = await getToken?.();
+            const res = await fetch(`/api/product/${id}/review`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(token ? { Authorization: `Bearer ${token}` } : {})
+                },
+                body: JSON.stringify({ rating: reviewRating, comment: reviewComment })
+            });
+            const data = await res.json();
+            // Debug: log backend response
+            console.log('Review POST response:', data);
+            if (data.success) {
+                toast.success("Review submitted!");
+                setReviewComment("");
+                setReviewRating(5);
+                fetchLatestProduct();
+                if (typeof fetchAllProducts === 'function') fetchAllProducts();
+            } else {
+                setReviewError(data.message || "Failed to submit review.");
+                toast.error(data.message || "Failed to submit review.");
+            }
+        } catch (err) {
+            setReviewError("Failed to submit review.");
+            toast.error("Failed to submit review.");
+        } finally {
+            setReviewLoading(false);
+        }
+    };
+
+    // Add a function to fetch the latest product data from the backend
+    const fetchLatestProduct = async () => {
+        try {
+            const res = await fetch(`/api/product/${id}`);
+            const data = await res.json();
+            if (data.success && data.product) {
+                setProductData(data.product);
+            }
+        } catch {}
+    };
+
+    // Add delete review handler
+    const handleDeleteReview = async (index) => {
+        if (!window.confirm('Are you sure you want to delete this review?')) return;
+        try {
+            const token = await getToken?.();
+            const res = await fetch(`/api/product/${id}/review`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { Authorization: `Bearer ${token}` } : {})
+                },
+                body: JSON.stringify({ index })
+            });
+            const data = await res.json();
+            if (data.success) {
+                toast.success('Review deleted');
+                fetchLatestProduct();
+            } else {
+                toast.error(data.message || 'Failed to delete review');
+            }
+        } catch {
+            toast.error('Failed to delete review');
+        }
+    };
 
     return productData ? (<>
         <Navbar />
@@ -105,17 +211,20 @@ const Product = () => {
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="flex items-center gap-0.5">
-                            <Image className="h-4 w-4" src={assets.star_icon} alt="star_icon" />
-                            <Image className="h-4 w-4" src={assets.star_icon} alt="star_icon" />
-                            <Image className="h-4 w-4" src={assets.star_icon} alt="star_icon" />
-                            <Image className="h-4 w-4" src={assets.star_icon} alt="star_icon" />
-                            <Image
-                                className="h-4 w-4"
-                                src={assets.star_dull_icon}
-                                alt="star_dull_icon"
-                            />
+                            {Array.from({ length: 5 }).map((_, index) => (
+                                <Image
+                                    key={index}
+                                    className="h-4 w-4"
+                                    src={
+                                        index < fullStars
+                                            ? assets.star_icon
+                                            : assets.star_dull_icon
+                                    }
+                                    alt="star_icon"
+                                />
+                            ))}
                         </div>
-                        <p>(4.5)</p>
+                        <p>({avgRating})</p>
                     </div>
                     <p className="text-gray-600 mt-3">
                         {productData.description}
@@ -168,6 +277,69 @@ const Product = () => {
                         >
                             Buy now
                         </button>
+                    </div>
+
+                    {/* Review Form and List */}
+                    <div className="mt-10">
+                        <h3 className="text-lg font-semibold mb-2">Customer Reviews</h3>
+                        {/* Review Form: Only show if user is logged in */}
+                        {user && (
+                            <form className="mb-6 flex flex-col gap-2 max-w-md" onSubmit={handleReviewSubmit}>
+                                <label className="font-medium">Your Rating:</label>
+                                <div className="flex gap-1">
+                                    {Array.from({ length: 5 }).map((_, i) => (
+                                        <button
+                                            type="button"
+                                            key={i}
+                                            className={`text-2xl ${i < reviewRating ? 'text-orange-400' : 'text-gray-300'}`}
+                                            onClick={() => setReviewRating(i + 1)}
+                                            aria-label={`Rate ${i + 1} star${i === 0 ? '' : 's'}`}
+                                        >
+                                            ★
+                                        </button>
+                                    ))}
+                                </div>
+                                <textarea
+                                    className="border rounded p-2"
+                                    rows={2}
+                                    placeholder="Write your review..."
+                                    value={reviewComment}
+                                    onChange={e => setReviewComment(e.target.value)}
+                                />
+                                {reviewError && <div className="text-red-500 text-xs">{reviewError}</div>}
+                                <button
+                                    type="submit"
+                                    className="bg-orange-600 text-white px-4 py-2 rounded mt-2 disabled:opacity-60"
+                                    disabled={reviewLoading}
+                                >
+                                    {reviewLoading ? "Submitting..." : "Submit Review"}
+                                </button>
+                            </form>
+                        )}
+                        {/* Reviews List */}
+                        <div className="space-y-4">
+                            {reviews.length > 0 ? reviews.map((review, idx) => (
+                                <div key={idx} className="border-b pb-2 flex justify-between items-start">
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            {Array.from({ length: 5 }).map((_, i) => (
+                                                <span key={i} className={`text-sm ${i < review.rating ? 'text-orange-400' : 'text-gray-300'}`}>★</span>
+                                            ))}
+                                            <span className="text-xs text-gray-500 ml-2">{new Date(review.date).toLocaleDateString()}</span>
+                                        </div>
+                                        <div className="text-sm mt-1">{review.comment}</div>
+                                    </div>
+                                    {user && (
+                                        <button
+                                            className="text-xs text-red-500 ml-2 hover:underline"
+                                            onClick={() => handleDeleteReview(idx)}
+                                        >
+                                            Delete
+                                        </button>
+                                    )}
+                                </div>
+                            )) : <div className="text-gray-500 text-sm">No reviews yet.</div>}
+                        </div>
                     </div>
                 </div>
             </div>

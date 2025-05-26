@@ -25,20 +25,27 @@ const Navbar = () => {
         <span className="text-xs md:text-sm text-gray-500 -mt-1">Dreams To Reality</span>
       </div>
       <div className="flex items-center gap-4 lg:gap-8 max-md:hidden">
-        <Link href="/" className="hover:text-gray-900 transition">
-          Home
+        <Link href="/" className="group relative transition">
+          <span className="hover:text-orange-600 transition">Home</span>
+          <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-gradient-to-r from-orange-500 to-orange-400 rounded transition-all duration-300"></span>
         </Link>
-        <Link href="/all-products" className="hover:text-gray-900 transition">
-          Shop
+        <Link href="/all-products" className="group relative transition">
+          <span className="hover:text-orange-600 transition">Shop</span>
+          <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-gradient-to-r from-orange-500 to-orange-400 rounded transition-all duration-300"></span>
         </Link>
-        <Link href="/SecondPage.html" className="hover:text-gray-900 transition">
-          About Us
+        <Link href="/SecondPage.html" className="group relative transition">
+          <span className="hover:text-orange-600 transition">About Us</span>
+          <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-gradient-to-r from-orange-500 to-orange-400 rounded transition-all duration-300"></span>
         </Link>
-        <Link href="/ContactAllOf.html" className="hover:text-gray-900 transition">
-          Contact
+        <Link href="/ContactAllOf.html" className="group relative transition">
+          <span className="hover:text-orange-600 transition">Contact</span>
+          <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-gradient-to-r from-orange-500 to-orange-400 rounded transition-all duration-300"></span>
         </Link>
 
-        {isSeller && <button onClick={() => router.push('/seller')} className="text-xs border px-4 py-1.5 rounded-full">Seller Dashboard</button>}
+        {isSeller && <button onClick={() => router.push('/seller')} className="group relative text-xs border px-4 py-1.5 rounded-full transition overflow-hidden">
+          <span className="hover:text-orange-600 transition">Seller Dashboard</span>
+          <span className="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-gradient-to-r from-orange-500 to-orange-400 rounded transition-all duration-300"></span>
+        </button>}
 
       </div>
 

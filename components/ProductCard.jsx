@@ -7,6 +7,13 @@ const ProductCard = ({ product }) => {
 
     const { currency, router } = useAppContext()
 
+    // Calculate average rating
+    const avgRating = product.reviews && product.reviews.length > 0
+        ? (product.reviews.reduce((sum, r) => sum + r.rating, 0) / product.reviews.length).toFixed(1)
+        : '0.0';
+    const fullStars = Math.floor(avgRating);
+    const hasHalfStar = avgRating - fullStars >= 0.5;
+
     return (
         <div
             onClick={() => { router.push('/product/' + product._id); scrollTo(0, 0) }}
@@ -32,14 +39,14 @@ const ProductCard = ({ product }) => {
             <p className="md:text-base font-medium pt-2 w-full truncate">{product.name}</p>
             <p className="w-full text-xs text-gray-500/70 max-sm:hidden truncate">{product.description}</p>
             <div className="flex items-center gap-2">
-                <p className="text-xs">{4.5}</p>
+                <p className="text-xs">{avgRating}</p>
                 <div className="flex items-center gap-0.5">
                     {Array.from({ length: 5 }).map((_, index) => (
                         <Image
                             key={index}
                             className="h-3 w-3"
                             src={
-                                index < Math.floor(4)
+                                index < fullStars
                                     ? assets.star_icon
                                     : assets.star_dull_icon
                             }
