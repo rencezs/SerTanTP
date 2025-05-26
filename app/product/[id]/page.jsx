@@ -329,7 +329,7 @@ const Product = () => {
                                         </div>
                                         <div className="text-sm mt-1">{review.comment}</div>
                                     </div>
-                                    {user && (
+                                    {user && (user.id === review.userId || user.id === productData.userId) && (
                                         <button
                                             className="text-xs text-red-500 ml-2 hover:underline"
                                             onClick={() => handleDeleteReview(idx)}
