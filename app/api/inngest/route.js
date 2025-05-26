@@ -1,20 +1,18 @@
 import { serve } from "inngest/next";
-import { inngest, syncUserCreation, syncUserUpdation, syncUserDeletion, createUserOrder } from "../../../config/inngest";
+import { inngest, syncUserCreation, syncUserUpdation, syncUserDeletion, createUserOrder } from "@/config/inngest";
 
-// Create an API that serves zero functions
+// Serve your Inngest functions
 export const { GET, POST, PUT } = serve({
-  client: inngest,
-  functions: [
-    /* your functions will be passed here later! */
-
+    client: inngest,
+    functions: [
         syncUserCreation,
         syncUserUpdation,
         syncUserDeletion,
-
-        createUserOrder,
-
-
-
-
-  ],
+        createUserOrder
+    ],
+    // Add basic auth for security in development
+    baseAuth: process.env.NODE_ENV === 'development' ? {
+        username: 'quickcart',
+        password: process.env.INNGEST_DEV_PASSWORD || 'development'
+    } : undefined
 });

@@ -12,15 +12,20 @@ async function connectDB() {
     }
 
     if(!cached.promise) {
-        // Using the connection string that worked with the native driver
-        const mongoUri = 'mongodb+srv://AllOff123-samePass:AllOff123@cluster0.ax0xzjc.mongodb.net/Admen?retryWrites=true&w=majority';
+        const mongoUri = process.env.MONGODB_URI;
+        
+        if (!mongoUri) {
+            throw new Error('MONGODB_URI is not defined in environment variables');
+        }
         
         console.log('Attempting to connect to MongoDB...');
         
         try {
             cached.promise = mongoose.connect(mongoUri, {
                 bufferCommands: false,
-                maxPoolSize: 10
+                maxPoolSize: 10,
+                serverSelectionTimeoutMS: 5000,
+                socketTimeoutMS: 45000,
             });
             
             const conn = await cached.promise;
