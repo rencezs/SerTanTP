@@ -9,41 +9,62 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const Orders = () => {
-
-    const { currency, getToken, user } = useAppContext();
+    const { currency, getToken, user, isLoading: isContextLoading } = useAppContext();
 
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const fetchSellerOrders = async () => {
         try {
-            
             const token = await getToken();
+            if (!token) {
+                toast.error('Please login to view orders');
+                return;
+            }
 
             const {data} = await axios.get('/api/order/seller-orders', {headers: {Authorization: `Bearer ${token}`}})
 
             if (data.success) { 
                 setOrders(data.orders);
-                setLoading(false);
             } else {  
                 toast.error(data.message);
             }
-
         } catch (error) {
             toast.error(error.message);
-            
+        } finally {
+            setLoading(false);
         }
     }
 
     useEffect(() => {
-        if (user) {     
+        if (!isContextLoading && user) {
             fetchSellerOrders();
+        } else if (!isContextLoading && !user) {
+            setLoading(false);
         }
-    }, [user]);
+    }, [user, isContextLoading]);
+
+    if (isContextLoading || loading) {
+        return (
+            <div className="flex-1 h-screen overflow-scroll flex flex-col justify-between text-sm">
+                <Loading />
+            </div>
+        );
+    }
+
+    if (!user) {
+        return (
+            <div className="flex-1 h-screen overflow-scroll flex flex-col justify-between text-sm">
+                <div className="text-center py-10">
+                    Please login to view orders
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex-1 h-screen overflow-scroll flex flex-col justify-between text-sm">
-            {loading ? <Loading /> : <div className="md:p-10 p-4 space-y-5">
+            <div className="md:p-10 p-4 space-y-5">
                 <h2 className="text-lg font-medium">Orders</h2>
                 <div className="max-w-4xl rounded-md">
                     {orders.map((order, index) => (
@@ -82,8 +103,13 @@ const Orders = () => {
                             </div>
                         </div>
                     ))}
+                    {orders.length === 0 && (
+                        <div className="text-center py-10">
+                            No orders found
+                        </div>
+                    )}
                 </div>
-            </div>}
+            </div>
             <Footer />
         </div>
     );

@@ -17,17 +17,18 @@ export const AppContextProvider = (props) => {
     const currency = process.env.NEXT_PUBLIC_CURRENCY
     const router = useRouter()
 
-    const { user } = useUser();
+    const { user, isLoaded: isUserLoaded } = useUser();
     const {getToken} = useAuth()
 
     const [products, setProducts] = useState([])
-    const [userData, setUserData] = useState(false)
-    const [isSeller, setIsSeller] = useState(true)
+    const [userData, setUserData] = useState(null)
+    const [isSeller, setIsSeller] = useState(false)
     const [cartItems, setCartItems] = useState({})
+    const [isLoading, setIsLoading] = useState(true)
 
     const fetchProductData = async () => {
         try {
-            
+            setIsLoading(true)
             const {data} = await axios.get('/api/product/list')
 
             if (data.success) {
@@ -38,12 +39,14 @@ export const AppContextProvider = (props) => {
 
         } catch (error) {
             toast.error(error.message)
+        } finally {
+            setIsLoading(false)
         }
     }
 
     const fetchUserData = async () => {
        try {
-        if (user.publicMetadata.role  === 'seller') {
+        if (user?.publicMetadata?.role === 'seller') {
             setIsSeller(true)
         }
 
@@ -58,9 +61,8 @@ export const AppContextProvider = (props) => {
             toast.error(data.message)
         }
         
-        
        } catch (error) {
-        toast.error(data.message)
+        toast.error(error?.message || 'Error fetching user data')
        }
     }
 
@@ -142,20 +144,37 @@ export const AppContextProvider = (props) => {
     }, [])
 
     useEffect(() => {
-        if (user) { 
-               fetchUserData()  
+        if (isUserLoaded) {
+            if (user) {
+                fetchUserData()
+            } else {
+                setIsLoading(false)
             }
-    }, [user])
+        }
+    }, [user, isUserLoaded])
 
     const value = {
-        user, getToken, 
-        currency, router,
-        isSeller, setIsSeller,
-        userData, fetchUserData,
-        products, fetchProductData,
-        cartItems, setCartItems,
-        addToCart, updateCartQuantity,
-        getCartCount, getCartAmount
+        user,
+        getToken,
+        currency,
+        router,
+        isSeller,
+        setIsSeller,
+        userData,
+        fetchUserData,
+        products,
+        fetchProductData,
+        cartItems,
+        setCartItems,
+        addToCart,
+        updateCartQuantity,
+        getCartCount,
+        getCartAmount,
+        isLoading
+    }
+
+    if (!isUserLoaded) {
+        return null // or a loading spinner
     }
 
     return (
