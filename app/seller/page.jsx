@@ -14,7 +14,6 @@ const AddProduct = () => {
   const [files, setFiles] = useState([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('Earphone');
   const [price, setPrice] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
 
@@ -28,7 +27,7 @@ const AddProduct = () => {
       const formData = new FormData()
       formData.append('name', name)
       formData.append('description', description)
-      formData.append('category', category)
+      formData.append('category', 'Clothes') // Set default category to Clothes
       formData.append('price', price)
       formData.append('offerPrice', offerPrice)
       
@@ -46,7 +45,6 @@ const AddProduct = () => {
         setFiles([]);
         setName('');
         setDescription('');
-        setCategory('Earphone');
         setPrice('');
         setOfferPrice(''); 
       } else {
@@ -119,25 +117,6 @@ const AddProduct = () => {
           ></textarea>
         </div>
         <div className="flex items-center gap-5 flex-wrap">
-          <div className="flex flex-col gap-1 w-32">
-            <label className="text-base font-medium" htmlFor="category">
-              Category
-            </label>
-            <select
-              id="category"
-              className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-              onChange={(e) => setCategory(e.target.value)}
-              defaultValue={category}
-            >
-              <option value="Earphone">Earphone</option>
-              <option value="Headphone">Headphone</option>
-              <option value="Watch">Watch</option>
-              <option value="Smartphone">Smartphone</option>
-              <option value="Laptop">Laptop</option>
-              <option value="Camera">Camera</option>
-              <option value="Accessories">Accessories</option>
-            </select>
-          </div>
           <div className="flex flex-col gap-1 w-32">
             <label className="text-base font-medium" htmlFor="product-price">
               Product Price
