@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, { useState } from "react";
 import { assets, BagIcon, BoxIcon, CartIcon, HomeIcon } from "@/assets/assets";
 import Link from "next/link"
 import { useAppContext } from "@/context/AppContext";
@@ -11,9 +11,10 @@ const Navbar = () => {
 
   const { isSeller, router, user } = useAppContext();
   const { openSignIn } = useClerk();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="flex items-center justify-between px-6 md:px-16 lg:px-32 py-3 border-b border-gray-300 text-gray-700">
+    <nav className="flex items-center justify-between px-6 md:px-16 lg:px-32 py-3 border-b border-gray-300 text-gray-700 relative">
       <div className="flex flex-col items-center cursor-pointer w-28 md:w-32" onClick={() => router.push('/') }>
         <Image
           src="/copy/Picsart_23-04-27_15-55-05-831.png"
@@ -67,7 +68,10 @@ const Navbar = () => {
         </button>}
       </ul>
 
-      <div className="flex items-center md:hidden gap-3">
+      <div className="md:hidden flex items-center gap-3">
+        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 focus:outline-none">
+          <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
         {isSeller && <button onClick={() => router.push('/seller')} className="text-xs border px-4 py-1.5 rounded-full">Seller Dashboard</button>}
         {
         user 
@@ -88,6 +92,15 @@ const Navbar = () => {
           Account
         </button>}
       </div>
+      {mobileMenuOpen && (
+        <div className="absolute top-full left-0 w-full bg-white shadow-lg z-50 flex flex-col items-center py-4 md:hidden animate-fade-in">
+          <Link href="/" className="py-2 w-full text-center hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+          <Link href="/all-products" className="py-2 w-full text-center hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Shop</Link>
+          <Link href="/SecondPage.html" className="py-2 w-full text-center hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+          <Link href="/ContactAllOf.html" className="py-2 w-full text-center hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+          {isSeller && <button onClick={() => {router.push('/seller'); setMobileMenuOpen(false);}} className="py-2 w-full text-center hover:bg-gray-100">Seller Dashboard</button>}
+        </div>
+      )}
     </nav>
   );
 };

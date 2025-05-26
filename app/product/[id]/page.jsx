@@ -280,11 +280,11 @@ const Product = () => {
                     </div>
 
                     {/* Review Form and List */}
-                    <div className="mt-10">
+                    <div className="mt-10 w-full max-w-xl mx-auto px-2 sm:px-0">
                         <h3 className="text-lg font-semibold mb-2">Customer Reviews</h3>
                         {/* Review Form: Only show if user is logged in */}
                         {user && (
-                            <form className="mb-6 flex flex-col gap-2 max-w-md" onSubmit={handleReviewSubmit}>
+                            <form className="mb-6 flex flex-col gap-2 w-full" onSubmit={handleReviewSubmit}>
                                 <label className="font-medium">Your Rating:</label>
                                 <div className="flex gap-1">
                                     {Array.from({ length: 5 }).map((_, i) => (
@@ -300,7 +300,7 @@ const Product = () => {
                                     ))}
                                 </div>
                                 <textarea
-                                    className="border rounded p-2"
+                                    className="border rounded p-2 w-full"
                                     rows={2}
                                     placeholder="Write your review..."
                                     value={reviewComment}
@@ -317,17 +317,17 @@ const Product = () => {
                             </form>
                         )}
                         {/* Reviews List */}
-                        <div className="space-y-4">
+                        <div className="space-y-4 w-full">
                             {reviews.length > 0 ? reviews.map((review, idx) => (
-                                <div key={idx} className="border-b pb-2 flex justify-between items-start">
-                                    <div>
-                                        <div className="flex items-center gap-2">
+                                <div key={idx} className="border-b pb-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                                    <div className="w-full">
+                                        <div className="flex items-center gap-2 flex-wrap">
                                             {Array.from({ length: 5 }).map((_, i) => (
                                                 <span key={i} className={`text-sm ${i < review.rating ? 'text-orange-400' : 'text-gray-300'}`}>★</span>
                                             ))}
                                             <span className="text-xs text-gray-500 ml-2">{new Date(review.date).toLocaleDateString()}</span>
                                         </div>
-                                        <div className="text-sm mt-1">{review.comment}</div>
+                                        <div className="text-sm mt-1 break-words w-full max-w-xs sm:max-w-full">{review.comment}</div>
                                     </div>
                                     {user && (user.id === review.userId || user.id === productData.userId) && (
                                         <button
