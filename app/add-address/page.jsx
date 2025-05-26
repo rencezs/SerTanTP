@@ -21,28 +21,64 @@ const AddAddress = () => {
         state: '',
     })
 
+    const validateForm = () => {
+        if (!address.fullName?.trim()) return "Full name is required";
+        if (!address.phoneNumber?.trim()) return "Phone number is required";
+        if (!address.pincode?.trim()) return "Pin code is required";
+        if (!address.area?.trim()) return "Address area is required";
+        if (!address.city?.trim()) return "City is required";
+        if (!address.state?.trim()) return "State is required";
+        return null;
+    };
+
     const onSubmitHandler = async (e) => {
         e.preventDefault();
         
         if (loading) return;
+
+        // Validate form
+        const error = validateForm();
+        if (error) {
+            toast.error(error);
+            return;
+        }
+
         setLoading(true);
+        const loadingToast = toast.loading('Adding address...');
 
         try {
-            const token = await getToken()
-            const {data} = await axios.post('/api/user/add-address', {address}, {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+            const token = await getToken();
+            if (!token) {
+                toast.error('Please login to add address');
+                return;
+            }
+
+            const {data} = await axios.post('/api/user/add-address', 
+                {address}, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
 
             if (data.success) { 
-                toast.success(data.message)
-                router.push('/cart')
+                toast.success(data.message);
+                router.push('/cart');
             } else {
-                toast.error(data.message)
+                toast.error(data.message || 'Failed to add address');
             }
             
         } catch (error) {
-            toast.error(error.response?.data?.message || error.message || 'Something went wrong')
+            console.error('Error adding address:', error);
+            toast.error(
+                error.response?.data?.message || 
+                error.message || 
+                'Failed to add address. Please try again.'
+            );
         } finally {
+            toast.dismiss(loadingToast);
             setLoading(false);
         }
     }
