@@ -10,6 +10,7 @@ const AddProduct = () => {
 
   const {getToken} = useAppContext()
 
+  const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -19,19 +20,22 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData()
-    formData.append('name', name)
-    formData.append('description', description)
-    formData.append('category', category)
-    formData.append('price', price)
-    formData.append('offerPrice', offerPrice)
     
-    for (let i = 0; i < files.length; i++) {
-      formData.append('images', files[i])
-    }
+    if (loading) return; // Prevent double submission
+    setLoading(true);
 
     try {
+      const formData = new FormData()
+      formData.append('name', name)
+      formData.append('description', description)
+      formData.append('category', category)
+      formData.append('price', price)
+      formData.append('offerPrice', offerPrice)
+      
+      for (let i = 0; i < files.length; i++) {
+        formData.append('images', files[i])
+      }
+
       const token = await getToken()
       const {data} = await axios.post('/api/product/add', formData, {
         headers:{Authorization:`Bearer ${token}`} 
@@ -51,12 +55,10 @@ const AddProduct = () => {
       
     } catch (error) {
       toast.error(error.message)
+    } finally {
+      setLoading(false);
     }
-
-    const {data} = await axios.post('/api/product/add', formData, {
-  
-    })
-};
+  };
 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">
@@ -165,8 +167,12 @@ const AddProduct = () => {
             />
           </div>
         </div>
-        <button type="submit" className="px-8 py-2.5 bg-orange-600 text-white font-medium rounded">
-          ADD
+        <button 
+          type="submit" 
+          disabled={loading}
+          className={`px-8 py-2.5 bg-orange-600 text-white font-medium rounded ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
+          {loading ? 'Adding...' : 'ADD'}
         </button>
       </form>
       {/* <Footer /> */}

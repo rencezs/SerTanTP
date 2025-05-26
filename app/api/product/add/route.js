@@ -2,8 +2,11 @@ import { NextResponse } from 'next/server';
 import {v2 as cloudinary} from 'cloudinary'
 import { getAuth } from '@clerk/nextjs/server'
 import authSeller from '@/lib/authSeller';
-import connectDB from '@/config/db';
+import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
+
+// Add submission tracking
+const submissionCache = new Map();
 
 //Configure Cloudinary
 cloudinary.config({ 
@@ -40,6 +43,19 @@ export async function POST(request) {
         // 3. Form data validation
         const formData = await request.formData() 
         const name = formData.get('name')?.trim();
+        
+        // Check for duplicate submission
+        const submissionKey = `${userId}-${name}-${Date.now()}`;
+        if (submissionCache.has(submissionKey)) {
+            console.log('Duplicate submission detected');
+            return NextResponse.json({
+                success: false,
+                message: "Duplicate submission detected. Please wait a moment before trying again."
+            });
+        }
+        submissionCache.set(submissionKey, true);
+        setTimeout(() => submissionCache.delete(submissionKey), 5000); // Clear after 5 seconds
+
         const description = formData.get('description')?.trim();
         const category = formData.get('category')?.trim();
         const price = parseFloat(formData.get('price'));
