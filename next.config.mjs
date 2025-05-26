@@ -15,6 +15,25 @@ const nextConfig = {
         ],
         unoptimized: true
     },
+    // Enable static file serving from /public directory
+    reactStrictMode: true,
+    trailingSlash: true,
+    // Configure static file handling
+    async headers() {
+        return [
+            {
+                source: '/static/:path*',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=31536000, immutable',
+                    },
+                ],
+            },
+        ];
+    },
+    // Ensure static files are served correctly
+    pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
 };
 
 export default nextConfig;
